@@ -7,6 +7,19 @@ from rest_framework.permissions import (
     )
 from .serializers import BlogSerializer
 from .models import Blog
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['username'] = user.username
+        return token
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
+
 
 class CustomPermission(BasePermission):
     message = 'Adding customers not allowed.'
@@ -15,7 +28,6 @@ class CustomPermission(BasePermission):
             return True
         else:
             return request.user == obj.user
-
 
 class BlogView(ListCreateAPIView):
     permission_classes = [DjangoModelPermissionsOrAnonReadOnly]
@@ -26,3 +38,12 @@ class BlogRetrieveView(RetrieveUpdateDestroyAPIView):
     permission_classes = [CustomPermission, DjangoModelPermissions]
     queryset = Blog.objects.all()
     serializer_class = BlogSerializer
+
+class UserBlogsView(ListCreateAPIView):
+    permission_classes = [CustomPermission]
+    serializer_class = BlogSerializer
+    
+    def get_queryset(self):
+        if self.request.user.id is not None:
+            user = self.request.user
+            return Blog.objects.filter(user=user)
