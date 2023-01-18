@@ -25,8 +25,13 @@ export default function Header() {
           >
             <Menu />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            News
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1 }}
+            onClick={() => nav("/")}
+          >
+            Home
           </Typography>
           {!user ? (
             <Button color="inherit" onClick={() => nav("/login")}>

@@ -8,6 +8,7 @@ const AuthContext = createContext();
 export default AuthContext;
 
 export const AuthProvider = ({ children }) => {
+  const [loading, setLoading] = useState(true);
   const nav = useNavigate();
   const TOKENS_KEY = "TOKENS";
 
@@ -53,23 +54,28 @@ export const AuthProvider = ({ children }) => {
 
   const refreshToken = () => {
     axios
-      .post(REFRESH_URL, { refresh: tokens.refresh })
+      .post(REFRESH_URL, { refresh: tokens?.refresh })
       .then((res) => {
-        setTokens(res.data);
         localStorage.setItem(TOKENS_KEY, JSON.stringify(res.data));
+        setTokens(res.data);
+        setUser(jwt_decode(res.data.access).username);
+        if (loading) setLoading(false);
       })
-      .catch(logout);
+      .catch(() => {
+        logout();
+        if (loading) setLoading(false);
+      });
   };
 
   useEffect(() => {
-    console.log("aewfw");
+    if (loading) refreshToken();
     let intervalID = setInterval(() => {
       if (tokens) {
         refreshToken();
       }
-    }, 60 * 1000 * 5);
+    }, 60 * 1000 * 4);
     return () => clearInterval(intervalID);
-  }, [tokens]);
+  }, [tokens, loading]);
 
   let contextData = {
     loginUser,
@@ -79,6 +85,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={contextData}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={contextData}>
+      {loading ? undefined : children}
+    </AuthContext.Provider>
   );
 };

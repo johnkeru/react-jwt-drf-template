@@ -12,11 +12,13 @@ const App = () => {
       <CssBaseline />
       <BrowserRouter>
         <AuthProvider>
-          <Header />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-          </Routes>
+          <>
+            <Header />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+            </Routes>
+          </>
         </AuthProvider>
       </BrowserRouter>
     </Grid>

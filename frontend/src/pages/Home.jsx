@@ -9,14 +9,17 @@ import { Grid } from "@mui/material";
 
 const Home = () => {
   const [blogs, setBlogs] = useState([]);
-  const { tokens } = useContext(AuthContext);
+  const { tokens, logout } = useContext(AuthContext);
 
   useEffect(() => {
     axios
-      .get(BLOGS_URL, { headers: { Authorization: "Bearer " + tokens.access } })
+      .get(BLOGS_URL, {
+        headers: { Authorization: "Bearer " + tokens?.access },
+      })
       .then((res) => {
         setBlogs(res.data);
-      });
+      })
+      .catch(logout);
   }, []);
 
   return (
