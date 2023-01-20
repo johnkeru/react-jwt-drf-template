@@ -5,7 +5,11 @@ import axios from "axios";
 import { BLOGS_URL } from "../utils/url";
 import { useContext } from "react";
 import AuthContext from "../context/AuthContext";
-import { Grid } from "@mui/material";
+import { Grid, CardActionArea } from "@mui/material";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
 
 const Home = () => {
   const [blogs, setBlogs] = useState([]);
@@ -23,11 +27,30 @@ const Home = () => {
   }, []);
 
   return (
-    <div>
+    <Grid display="flex" justifyContent="space-evenly" mt={2}>
       {blogs.length !== 0
-        ? blogs.map((blog) => <Grid key={blog.id}>{blog.body}</Grid>)
-        : undefined}
-    </div>
+        ? blogs.map((blog) => (
+            <Card key={blog.id} sx={{ width: "40%" }}>
+              <CardActionArea>
+                <CardMedia
+                  component="img"
+                  height="140"
+                  image="https://source.unsplash.com/random/?blogs"
+                  alt="https://source.unsplash.com/random/?blogs"
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h5">
+                    {blog.id}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {blog.body}
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          ))
+        : "No blogs available. :<"}
+    </Grid>
   );
 };
 

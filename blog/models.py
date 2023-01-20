@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 class Blog(models.Model):
     class Meta:
@@ -11,7 +11,7 @@ class Blog(models.Model):
 
     choices = (('private', 'Private'), ('public', 'Public'))
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     body = models.TextField(max_length=500)
     privacy = models.CharField(max_length=10, choices=choices, default='public')
     updated_at = models.DateField(auto_now=True)
@@ -19,3 +19,5 @@ class Blog(models.Model):
 
     custom_objects = CustomManager()
     objects = models.Manager()
+
+

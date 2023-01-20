@@ -6,31 +6,32 @@ import InputFields from "../utils/InputFields";
 import { blue, red } from "@mui/material/colors";
 import { useNavigate } from "react-router-dom";
 
-const Login = () => {
-  const { loginUser } = useContext(AuthContext);
-  const [userNotFound, setUserNotFound] = useState("");
+const Register = () => {
+  const { registerUser } = useContext(AuthContext);
+  const [userIsExisted, setUserIsExisted] = useState("");
   const nav = useNavigate();
   return (
     <Container component="main" maxWidth="xs" sx={{ mt: 20 }}>
       <div>
         <Typography component="h1" variant="h5">
-          Login
+          Register
         </Typography>
 
-        {userNotFound ? (
+        {userIsExisted ? (
           <Typography sx={{ mt: 1, color: red[300] }} variant="body2">
-            {userNotFound}
+            {userIsExisted}
           </Typography>
         ) : undefined}
 
         <Formik
-          initialValues={{ email: "", password: "" }}
+          initialValues={{ email: "", username: "", password: "" }}
           onSubmit={(values, { setErrors }) =>
-            loginUser(values, setErrors, setUserNotFound)
+            registerUser(values, setErrors, setUserIsExisted)
           }
         >
           <Form>
             <InputFields name={"email"} />
+            <InputFields name={"username"} />
             <InputFields name={"password"} />
             <Button
               type="submit"
@@ -39,7 +40,7 @@ const Login = () => {
               color="primary"
               sx={{ py: 1.5, mt: 5 }}
             >
-              Sign In
+              Sign Up
             </Button>
           </Form>
         </Formik>
@@ -49,14 +50,14 @@ const Login = () => {
           alignItems="center"
           justifyContent="space-between"
         >
-          <Typography variant="body1">No Account?</Typography>
+          <Typography variant="body1">Already have an Account?</Typography>
           <Typography
             variant="body1"
             color={blue[400]}
             sx={{ cursor: "pointer", textDecoration: "underline" }}
-            onClick={() => nav("/register")}
+            onClick={() => nav("/login")}
           >
-            Sign Up
+            Sign In
           </Typography>
         </Grid>
       </div>
@@ -64,4 +65,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

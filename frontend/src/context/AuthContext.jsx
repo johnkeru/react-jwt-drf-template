@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
-import { LOGIN_URL, REFRESH_URL } from "../utils/url";
+import { LOGIN_URL, REFRESH_URL, REGISTER_URL } from "../utils/url";
 import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 
@@ -26,21 +26,47 @@ export const AuthProvider = ({ children }) => {
   const loginUser = (values, setErrors, setUserNotFound) => {
     axios
       .post(LOGIN_URL, {
-        username: values.username,
+        email: values.email,
         password: values.password,
       })
       .then((res) => {
         setTokens(res.data);
+        const username = jwt_decode(res.data.access).username;
+        setUser(username);
         localStorage.setItem(TOKENS_KEY, JSON.stringify(res.data));
-        setUser(jwt_decode(res.data.access).username);
         nav("/");
       })
       .catch((err) => {
         const errorData = err.response.data;
         setUserNotFound(errorData?.detail);
-        let kv = {}; // KEY VALUE PAIR FOR SETTING AN ERROR.
+        let kv = {}; // KEY VALUE PAIR FOR SETTING AN ERRORS.
         kv[Object.keys(errorData)[0]] = errorData[Object.keys(errorData)[0]];
         kv[Object.keys(errorData)[1]] = errorData[Object.keys(errorData)[1]];
+        setErrors(kv);
+      });
+  };
+
+  const registerUser = (values, setErrors, setUserIsExisted) => {
+    axios
+      .post(REGISTER_URL, {
+        email: values.email,
+        username: values.username,
+        password: values.password,
+      })
+      .then((res) => {
+        setTokens(res.data);
+        const username = jwt_decode(res.data.access).username;
+        setUser(username);
+        localStorage.setItem(TOKENS_KEY, JSON.stringify(res.data));
+        nav("/");
+      })
+      .catch((err) => {
+        const errorData = err.response.data;
+        setUserIsExisted(errorData?.detail);
+        let kv = {}; // KEY VALUE PAIR FOR SETTING AN ERRORS.
+        kv[Object.keys(errorData)[0]] = errorData[Object.keys(errorData)[0]];
+        kv[Object.keys(errorData)[1]] = errorData[Object.keys(errorData)[1]];
+        kv[Object.keys(errorData)[2]] = errorData[Object.keys(errorData)[2]];
         setErrors(kv);
       });
   };
@@ -56,14 +82,15 @@ export const AuthProvider = ({ children }) => {
     axios
       .post(REFRESH_URL, { refresh: tokens?.refresh })
       .then((res) => {
-        localStorage.setItem(TOKENS_KEY, JSON.stringify(res.data));
         setTokens(res.data);
-        setUser(jwt_decode(res.data.access).username);
-        if (loading) setLoading(false);
+        localStorage.setItem(TOKENS_KEY, JSON.stringify(res.data));
+        const username = jwt_decode(res.data.access).username;
+        setUser(username);
+        setLoading(false);
       })
       .catch(() => {
         logout();
-        if (loading) setLoading(false);
+        setLoading(false);
       });
   };
 
@@ -79,6 +106,7 @@ export const AuthProvider = ({ children }) => {
 
   let contextData = {
     loginUser,
+    registerUser,
     logout,
     user,
     tokens,
