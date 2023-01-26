@@ -4,4 +4,5 @@ export const REGISTER_URL = URL + "auth/register/";
 export const LOGIN_URL = URL + "auth/token/";
 export const REFRESH_URL = URL + "auth/token/refresh/";
 
-export const BLOGS_URL = URL + "api/user/blogs";
+export const BLOGS_URL = URL + "blogs/";
+export const BLOG_URL = URL + "blogs/"; // with id

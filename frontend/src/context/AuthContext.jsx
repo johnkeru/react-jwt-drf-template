@@ -31,8 +31,7 @@ export const AuthProvider = ({ children }) => {
       })
       .then((res) => {
         setTokens(res.data);
-        const username = jwt_decode(res.data.access).username;
-        setUser(username);
+        setUser(jwt_decode(res.data.access).username);
         localStorage.setItem(TOKENS_KEY, JSON.stringify(res.data));
         nav("/");
       })
@@ -55,8 +54,7 @@ export const AuthProvider = ({ children }) => {
       })
       .then((res) => {
         setTokens(res.data);
-        const username = jwt_decode(res.data.access).username;
-        setUser(username);
+        setUser(jwt_decode(res.data.access).username);
         localStorage.setItem(TOKENS_KEY, JSON.stringify(res.data));
         nav("/");
       })
@@ -97,9 +95,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (loading) refreshToken();
     let intervalID = setInterval(() => {
-      if (tokens) {
-        refreshToken();
-      }
+      if (tokens) refreshToken();
     }, 60 * 1000 * 4);
     return () => clearInterval(intervalID);
   }, [tokens, loading]);

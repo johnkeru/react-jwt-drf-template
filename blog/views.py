@@ -1,37 +1,60 @@
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.permissions import (
-    DjangoModelPermissionsOrAnonReadOnly, 
-    BasePermission, 
-    SAFE_METHODS, 
-    DjangoModelPermissions
-    )
-from .serializers import BlogSerializer
+from rest_framework.permissions import DjangoModelPermissionsOrAnonReadOnly, IsAuthenticated
+from rest_framework import viewsets
+from rest_framework import generics
+from rest_framework import status
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from .serializers import BlogSerializer, BlogPostSerializer
 from .models import Blog
+from .permissions import CustomPermission
+from django.shortcuts import get_object_or_404
 
-
-class CustomPermission(BasePermission):
-    message = 'Adding customers not allowed.'
-    def has_object_permission(self, request, view, obj):
-        if request.method in SAFE_METHODS:
-            return True
-        else:
-            return request.user == obj.user
-
-class BlogView(ListCreateAPIView):
+class BlogViewSet(viewsets.ModelViewSet):
     permission_classes = [DjangoModelPermissionsOrAnonReadOnly]
-    queryset = Blog.custom_objects.all()
-    serializer_class = BlogSerializer
-
-class BlogRetrieveView(RetrieveUpdateDestroyAPIView):
-    permission_classes = [CustomPermission, DjangoModelPermissions]
     queryset = Blog.objects.all()
     serializer_class = BlogSerializer
 
-class UserBlogsView(ListCreateAPIView):
-    permission_classes = [CustomPermission]
+    def get_permissions(self):
+        if self.action in ['retrieve', 'update', 'destroy']:
+            self.permission_classes = [CustomPermission]
+        return super().get_permissions()
+    
+    def get_object(self):
+        slug = self.kwargs.get('pk')
+        return get_object_or_404(Blog, slug=slug)
+
+
+class CreatePost(APIView):
+    # permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
+
+    def post(self, request, format=None):
+        serializer = BlogPostSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class BlogGenericSet(generics.ListAPIView):
+    permission_classes = [DjangoModelPermissionsOrAnonReadOnly]
     serializer_class = BlogSerializer
     
     def get_queryset(self):
-        if self.request.user.id is not None:
-            user = self.request.user
-            return Blog.objects.filter(user=user)
+        slug = self.request.query_params.get('slug', None)
+        if slug:
+            return Blog.objects.filter(slug=slug)
+        return Blog.objects.all()
+  
+    # def get_queryset(self):
+    #     if self.request.user is not None:
+    #         user = self.request.user
+    #         return Blog.objects.filter(user=user)
+    #     return Blog.objects.all()
+        
+        
+        
+ 
