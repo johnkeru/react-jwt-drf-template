@@ -23,7 +23,7 @@ const Home = () => {
       })
       .catch(logout);
   }, []);
-  console.log(user);
+
   return (
     <Grid display="flex" justifyContent="space-evenly" mt={2} flexWrap="wrap">
       {blogs.length !== 0
@@ -32,7 +32,14 @@ const Home = () => {
               key={blog.id}
               sx={{ width: "40%", mb: 2, position: "relative" }}
             >
-              {user ? <BlogMenu /> : undefined}
+              {user && user?.user_id === blog.user ? (
+                <BlogMenu
+                  blog={blog}
+                  base_axios={base_axios}
+                  BLOGS_URL={BLOGS_URL}
+                  setBlogs={setBlogs}
+                />
+              ) : undefined}
               <CardActionArea>
                 <CardMedia
                   component="img"

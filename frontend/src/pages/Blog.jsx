@@ -1,7 +1,7 @@
 import React, { useEffect, useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
-import { BLOG_URL } from "../utils/url";
+import { BLOGS_URL } from "../utils/url";
 import { Grid, CardActionArea } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -15,7 +15,7 @@ const Blog = () => {
 
   useEffect(() => {
     base_axios
-      .get(BLOG_URL + slug)
+      .get(BLOGS_URL + slug)
       .then((res) => setBlog(res.data))
       .catch(() => setBlog(null));
   }, []);

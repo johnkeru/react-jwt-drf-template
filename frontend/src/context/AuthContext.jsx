@@ -17,9 +17,7 @@ export const AuthProvider = ({ children }) => {
   const tokens_state = has_tokens
     ? JSON.parse(localStorage.getItem(TOKENS_KEY))
     : null;
-  const user_state = has_tokens
-    ? jwt_decode(tokens_state.access).username
-    : null;
+  const user_state = has_tokens ? jwt_decode(tokens_state.access) : null;
 
   const [tokens, setTokens] = useState(() => tokens_state);
   const [user, setUser] = useState(() => user_state);
@@ -32,7 +30,7 @@ export const AuthProvider = ({ children }) => {
       })
       .then((res) => {
         setTokens(res.data);
-        setUser(jwt_decode(res.data.access).username);
+        setUser(jwt_decode(res.data.access));
         localStorage.setItem(TOKENS_KEY, JSON.stringify(res.data));
         nav("/");
       })
@@ -55,7 +53,7 @@ export const AuthProvider = ({ children }) => {
       })
       .then((res) => {
         setTokens(res.data);
-        setUser(jwt_decode(res.data.access).username);
+        setUser(jwt_decode(res.data.access));
         localStorage.setItem(TOKENS_KEY, JSON.stringify(res.data));
         nav("/");
       })
@@ -83,7 +81,7 @@ export const AuthProvider = ({ children }) => {
       .then((res) => {
         setTokens(res.data);
         localStorage.setItem(TOKENS_KEY, JSON.stringify(res.data));
-        const username = jwt_decode(res.data.access).username;
+        const username = jwt_decode(res.data.access);
         setUser(username);
         setLoading(false);
       })

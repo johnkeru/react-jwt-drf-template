@@ -4,7 +4,7 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
+import { Button, Grid } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import { Menu } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
@@ -33,14 +33,24 @@ export default function Header() {
           >
             Home
           </Typography>
+
           {!user ? (
             <Button color="inherit" onClick={() => nav("/login")}>
               Login
             </Button>
           ) : (
-            <Button color="inherit" onClick={logout}>
-              Logout: {user}
-            </Button>
+            <Grid display="flex" alignItems="center">
+              <Button
+                color="inherit"
+                onClick={() => nav("/create-post")}
+                sx={{ mr: 3 }}
+              >
+                Create Post
+              </Button>
+              <Button color="inherit" onClick={logout}>
+                Logout: {user?.username}
+              </Button>
+            </Grid>
           )}
         </Toolbar>
       </AppBar>

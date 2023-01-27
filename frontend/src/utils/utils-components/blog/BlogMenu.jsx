@@ -49,11 +49,23 @@ const StyledMenu = styled((props) => (
   },
 }));
 
-export default function BlogMenu() {
+export default function BlogMenu({ blog, base_axios, BLOGS_URL, setBlogs }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
+
+  const handleDelete = () => {
+    base_axios
+      .delete(BLOGS_URL + blog.slug)
+      .then(() => {
+        setBlogs((prevs) => prevs.filter((prev) => prev.slug !== blog.slug));
+        handleClose();
+      })
+      .catch(() => {
+        return;
+      });
+  };
 
   return (
     <div>
@@ -83,7 +95,7 @@ export default function BlogMenu() {
           <EditIcon />
           Edit
         </MenuItem>
-        <MenuItem onClick={handleClose} disableRipple>
+        <MenuItem onClick={handleDelete} disableRipple>
           <Delete />
           Delete
         </MenuItem>
