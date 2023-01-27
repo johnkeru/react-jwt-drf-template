@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useEffect, useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
@@ -10,27 +9,33 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 
 const Blog = () => {
-  const { tokens } = useContext(AuthContext);
+  const { base_axios } = useContext(AuthContext);
   const { slug } = useParams();
   const [blog, setBlog] = useState(null);
 
   useEffect(() => {
-    axios
-      .get(BLOG_URL + slug, {
-        headers: { Authorization: "Bearer " + tokens.access },
-      })
+    base_axios
+      .get(BLOG_URL + slug)
       .then((res) => setBlog(res.data))
-      .catch((err) => setBlog(null));
+      .catch(() => setBlog(null));
   }, []);
+
   return (
-    <Grid>
+    <Grid
+      sx={{
+        mt: 25,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       {blog && (
         <Card key={blog.slug} sx={{ width: "40%" }}>
           <CardActionArea>
             <CardMedia
               component="img"
-              height="140"
-              image="https://source.unsplash.com/random/?blogs"
+              height="400"
+              image={blog.image}
               alt={"no-image"}
             />
             <CardContent>

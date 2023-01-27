@@ -6,4 +6,4 @@ class CustomPermission(BasePermission):
         if request.method in SAFE_METHODS:
             return True
         else:
-            return request.user == obj.user
+            return obj.user == request.user

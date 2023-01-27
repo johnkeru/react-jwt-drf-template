@@ -3,6 +3,7 @@ import axios from "axios";
 import { LOGIN_URL, REFRESH_URL, REGISTER_URL } from "../utils/url";
 import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import base_axios from "../utils/base_axios";
 
 const AuthContext = createContext();
 export default AuthContext;
@@ -106,6 +107,7 @@ export const AuthProvider = ({ children }) => {
     logout,
     user,
     tokens,
+    base_axios: base_axios(tokens?.access),
   };
 
   return (

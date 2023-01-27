@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { BLOGS_URL } from "../utils/url";
 import { useContext } from "react";
 import AuthContext from "../context/AuthContext";
@@ -9,36 +8,38 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
+import BlogMenu from "../utils/utils-components/blog/BlogMenu";
 
 const Home = () => {
   const [blogs, setBlogs] = useState([]);
-  const { logout } = useContext(AuthContext);
+  const { logout, base_axios, user } = useContext(AuthContext);
   const nav = useNavigate();
 
   useEffect(() => {
-    axios
+    base_axios
       .get(BLOGS_URL)
       .then((res) => {
         setBlogs(res.data);
       })
       .catch(logout);
   }, []);
-
+  console.log(user);
   return (
     <Grid display="flex" justifyContent="space-evenly" mt={2} flexWrap="wrap">
       {blogs.length !== 0
         ? blogs.map((blog) => (
             <Card
               key={blog.id}
-              sx={{ width: "40%", mb: 2 }}
-              onClick={() => nav(`/blogs/${blog.slug}`)}
+              sx={{ width: "40%", mb: 2, position: "relative" }}
             >
+              {user ? <BlogMenu /> : undefined}
               <CardActionArea>
                 <CardMedia
                   component="img"
-                  height="140"
-                  image="https://source.unsplash.com/random/?blogs"
+                  height="250"
+                  image={blog.image}
                   alt={"no-image"}
+                  onClick={() => nav(`/blogs/${blog.slug}`)}
                 />
                 <CardContent>
                   <Typography gutterBottom variant="h5">

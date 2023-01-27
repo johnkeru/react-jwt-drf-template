@@ -2,7 +2,7 @@ import { Button, Container, Grid, Typography } from "@mui/material";
 import React, { useContext, useState } from "react";
 import AuthContext from "../context/AuthContext";
 import { Formik, Form } from "formik";
-import InputFields from "../utils/InputFields";
+import InputFields from "../utils/utils-components/InputFields";
 import { blue, red } from "@mui/material/colors";
 import { useNavigate } from "react-router-dom";
 
