@@ -25,9 +25,14 @@ class Blog(models.Model):
     choices = (('private', 'Private'), ('public', 'Public'))
     
     def save(self, *args, **kwargs):
-        if not self.slug:
+        if not self.pk:
             self.slug = generate_unique_slug(self)
+        else:
+            orig = Blog.objects.get(pk=self.pk)
+            if orig.body != self.body:
+                self.slug = generate_unique_slug(self)
         super(Blog, self).save(*args, **kwargs)
+        
 
     user = models.ForeignKey(get_user_model(), related_name='entries', on_delete=models.CASCADE)
     image = models.ImageField(upload_to=upload_to, default='posts/default.png', validators=[validate_file_extension])

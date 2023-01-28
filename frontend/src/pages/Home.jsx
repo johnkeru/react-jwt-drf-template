@@ -38,6 +38,7 @@ const Home = () => {
                   base_axios={base_axios}
                   BLOGS_URL={BLOGS_URL}
                   setBlogs={setBlogs}
+                  nav={nav}
                 />
               ) : undefined}
               <CardActionArea>

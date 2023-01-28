@@ -49,7 +49,13 @@ const StyledMenu = styled((props) => (
   },
 }));
 
-export default function BlogMenu({ blog, base_axios, BLOGS_URL, setBlogs }) {
+export default function BlogMenu({
+  blog,
+  base_axios,
+  BLOGS_URL,
+  setBlogs,
+  nav,
+}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => setAnchorEl(event.currentTarget);
@@ -65,6 +71,11 @@ export default function BlogMenu({ blog, base_axios, BLOGS_URL, setBlogs }) {
       .catch(() => {
         return;
       });
+  };
+
+  const handleUpdate = () => {
+    nav("/update-post/" + blog.slug);
+    handleClose();
   };
 
   return (
@@ -91,7 +102,7 @@ export default function BlogMenu({ blog, base_axios, BLOGS_URL, setBlogs }) {
         open={open}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose} disableRipple>
+        <MenuItem onClick={handleUpdate} disableRipple>
           <EditIcon />
           Edit
         </MenuItem>

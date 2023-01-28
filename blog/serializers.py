@@ -8,6 +8,7 @@ class BlogSerializer(serializers.ModelSerializer):
         
         
 class BlogPostSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(required=False)
     class Meta:
         model = Blog
         fields = ('user', 'body', 'image')

@@ -8,6 +8,7 @@ import CreatePost from "./pages/CreatePost";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import UpdatePost from "./pages/UpdatePost";
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/create-post" element={<CreatePost />} />
+              <Route path="/update-post/:slug" element={<UpdatePost />} />
               <Route path="/blogs/:slug" element={<Blog />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />

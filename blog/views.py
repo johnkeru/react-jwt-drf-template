@@ -16,6 +16,11 @@ class BlogViewSet(viewsets.ModelViewSet):
     serializer_class = BlogSerializer
     parser_classes = [MultiPartParser, FormParser]
     
+    def get_serializer_class(self):
+        if self.action in ['update', 'create', 'partial_update']:
+            return BlogPostSerializer
+        return BlogSerializer
+    
     def get_queryset(self):
         slug = self.request.query_params.get('slug', None)
         if slug:
