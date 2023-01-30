@@ -16,7 +16,7 @@ def validate_file_extension(value):
 
 class Blog(models.Model):
     class Meta:
-        ordering = ('-created_at',)
+        ordering = ('-created',)
     
     class CustomManager(models.Manager):
         def get_queryset(self):
@@ -38,9 +38,9 @@ class Blog(models.Model):
     image = models.ImageField(upload_to=upload_to, default='posts/default.png', validators=[validate_file_extension])
     body = models.TextField(max_length=500)
     privacy = models.CharField(max_length=10, choices=choices, default='public')
-    updated_at = models.DateField(auto_now=True)
-    created_at = models.DateField(auto_now_add=True)
-    slug = models.SlugField(max_length=250, unique_for_date='created_at', blank=True)
+    updated = models.DateField(auto_now=True)
+    created = models.DateField(auto_now_add=True)
+    slug = models.SlugField(max_length=250, unique_for_date='created', blank=True)
 
     custom_objects = CustomManager()
     objects = models.Manager()

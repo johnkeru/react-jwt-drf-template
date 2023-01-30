@@ -1,4 +1,4 @@
-from rest_framework.permissions import DjangoModelPermissionsOrAnonReadOnly, IsAuthenticated
+from rest_framework.permissions import DjangoModelPermissionsOrAnonReadOnly
 from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FormParser

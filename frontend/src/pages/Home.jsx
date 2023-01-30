@@ -19,7 +19,7 @@ const Home = () => {
     base_axios
       .get(BLOGS_URL)
       .then((res) => {
-        setBlogs(res.data);
+        setBlogs(res.data.results);
       })
       .catch(logout);
   }, []);
